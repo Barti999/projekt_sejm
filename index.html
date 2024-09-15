@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona z Ankieta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Ankieta</h1>
+    </header>
+    <main>
+        <form id="surveyForm">
+            <label for="question">Gdybyś był/była posłem, jak zagłosowałbyś/baś w sprawie ustawy XYZ?</label>
+            <div>
+                <input type="radio" id="against" name="vote" value="against">
+                <label for="against">PRZECIW</label>
+            </div>
+            <div>
+                <input type="radio" id="for" name="vote" value="for">
+                <label for="for">ZA</label>
+            </div>
+            <div>
+                <input type="radio" id="abstain" name="vote" value="abstain">
+                <label for="abstain">WSTRZYMAŁBYM SIĘ</label>
+            </div>
+            <button type="submit">Zatwierdź</button>
+        </form>
+        <div id="result"></div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
