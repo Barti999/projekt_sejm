@@ -51,7 +51,7 @@ function handleFormSubmit(event) {
         // Filtrujemy dane według wybranej opcji głosowania
         const filteredData = data.filter(row => {
             console.log("Sprawdzam wiersz:", row); // Wyświetl każdy wiersz przed filtrowaniem
-            return row['1-35'] === selectedVote;
+            return row['1-35'] === selectedVote.toUpperCase(); // Upewnij się, że porównanie jest poprawne
         });
 
         console.log("Dane po filtrowaniu:", filteredData);
