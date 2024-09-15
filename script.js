@@ -1,15 +1,16 @@
 // Funkcja do ładowania i parsowania pliku CSV
 function loadCSV(callback) {
+    console.log("Rozpoczynam ładowanie CSV...");
     Papa.parse("data.csv", {
         delimiter: ";", // Separator w pliku CSV
         download: true,
         header: true, // Traktuje pierwszy wiersz jako nagłówki kolumn
         complete: function(results) {
-            console.log("CSV Loaded:", results);
+            console.log("CSV załadowany:", results);
             callback(results.data); // Przekazujemy dane do callbacka
         },
         error: function(error) {
-            console.error("Error parsing CSV:", error);
+            console.error("Błąd podczas parsowania CSV:", error);
         }
     });
 }
@@ -21,6 +22,7 @@ function displayResults(filteredData) {
 
     if (filteredData.length === 0) {
         resultDiv.innerHTML = 'Brak wyników dla wybranej opcji.';
+        console.log("Brak wyników dla wybranej opcji.");
         return;
     }
 
@@ -31,6 +33,7 @@ function displayResults(filteredData) {
         list.appendChild(listItem);
     });
     resultDiv.appendChild(list);
+    console.log("Wyświetlane wyniki:", filteredData);
 }
 
 // Funkcja do obsługi wysłania formularza
@@ -38,16 +41,24 @@ function handleFormSubmit(event) {
     event.preventDefault(); // Zapobiega wysłaniu formularza
 
     const selectedVote = document.querySelector('input[name="vote"]:checked').value;
+    console.log("Wybrana opcja głosowania:", selectedVote);
 
     loadCSV(function(data) {
         // Filtrujemy dane według wybranej opcji głosowania
         const filteredData = data.filter(row => row['1-35'] === selectedVote);
+        console.log("Dane po filtrowaniu:", filteredData);
         displayResults(filteredData);
     });
 }
 
 // Wywołanie funkcji po załadowaniu strony
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("Strona załadowana, dodawanie obsługi formularza...");
     const surveyForm = document.getElementById('surveyForm');
-    surveyForm.addEventListener('submit', handleFormSubmit);
+    if (surveyForm) {
+        surveyForm.addEventListener('submit', handleFormSubmit);
+        console.log("Obsługa formularza dodana.");
+    } else {
+        console.error("Nie znaleziono formularza z identyfikatorem 'surveyForm'.");
+    }
 });
