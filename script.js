@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Strona załadowana, dodawanie obsługi formularza...");
+
     document.getElementById('surveyForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
@@ -8,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Wybrana opcja głosowania:", selectedOption);
 
         // Wczytywanie pliku CSV
-        console.log("Rozpoczynam ładowanie CSV...");
-        Papa.parse("data.csv", {
+        Papa.parse("data/data.csv", {
+            download: true,  // Pobieranie pliku CSV z serwera
             delimiter: ";",
             header: true,
             skipEmptyLines: true,
@@ -25,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("Dane do filtrowania:", results.data);
                 console.log("Sprawdzam wiersz:", results.data[0]);
 
+                // Przekształcenie danych do HTML
+                const resultDiv = document.getElementById('result');
                 if (filteredData.length > 0) {
-                    // Przekształcenie danych do HTML
-                    const resultDiv = document.getElementById('result');
                     let htmlContent = "<h2>Wyniki dla wybranej opcji:</h2><ul>";
 
                     filteredData.forEach(row => {
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     htmlContent += "</ul>";
                     resultDiv.innerHTML = htmlContent;
                 } else {
-                    document.getElementById('result').innerHTML = "Brak wyników dla wybranej opcji.";
+                    resultDiv.innerHTML = "Brak wyników dla wybranej opcji.";
                 }
             },
             error: function (error) {
