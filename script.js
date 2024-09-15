@@ -35,21 +35,7 @@ function loadCSV() {
     });
 }
 
-// Funkcja do obsługi przycisków na stronie
-function handleButtonClick() {
-    var button = document.getElementById('exampleButton');
-    if (button) {
-        button.addEventListener('click', function() {
-            console.log("Button clicked!");
-            // Możesz tu umieścić dodatkowe funkcje do obsługi
-        });
-    } else {
-        console.error("Button with id 'exampleButton' not found.");
-    }
-}
-
 // Wywołanie funkcji po załadowaniu strony
 document.addEventListener('DOMContentLoaded', function() {
     loadCSV();
-    handleButtonClick();
 });
