@@ -1,72 +1,50 @@
-// Funkcja do ładowania i parsowania pliku CSV
-function loadCSV(callback) {
-    console.log("Rozpoczynam ładowanie CSV...");
-    Papa.parse("data.csv", {
-        delimiter: ";", // Separator w pliku CSV
-        download: true,
-        header: true, // Traktuje pierwszy wiersz jako nagłówki kolumn
-        complete: function(results) {
-            console.log("CSV załadowany:", results);
-            console.log("CSV Meta:", results.meta);
-            console.log("Dane CSV:", results.data); // Wyświetl dane CSV
-            callback(results.data); // Przekazujemy dane do callbacka
-        },
-        error: function(error) {
-            console.error("Błąd podczas parsowania CSV:", error);
-        }
-    });
-}
-
-// Funkcja do wyświetlania wyników na stronie
-function displayResults(filteredData) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = ''; // Czyści poprzednie wyniki
-
-    if (filteredData.length === 0) {
-        resultDiv.innerHTML = 'Brak wyników dla wybranej opcji.';
-        console.log("Brak wyników dla wybranej opcji.");
-        return;
-    }
-
-    const list = document.createElement('ul');
-    filteredData.forEach(row => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${row['Nazwisko']} ${row['Imię ']}`; // Użyj 'Imię ' z dodatkową spacją
-        list.appendChild(listItem);
-    });
-    resultDiv.appendChild(list);
-    console.log("Wyświetlane wyniki:", filteredData);
-}
-
-// Funkcja do obsługi wysłania formularza
-function handleFormSubmit(event) {
-    event.preventDefault(); // Zapobiega wysłaniu formularza
-
-    const selectedVote = document.querySelector('input[name="vote"]:checked').value;
-    console.log("Wybrana opcja głosowania:", selectedVote);
-
-    loadCSV(function(data) {
-        console.log("Dane do filtrowania:", data); // Wyświetl dane przed filtrowaniem
-
-        // Filtrujemy dane według wybranej opcji głosowania
-        const filteredData = data.filter(row => {
-            console.log("Sprawdzam wiersz:", row); // Wyświetl każdy wiersz przed filtrowaniem
-            return row['1-35'] === selectedVote.toUpperCase(); // Upewnij się, że porównanie jest poprawne
-        });
-
-        console.log("Dane po filtrowaniu:", filteredData);
-        displayResults(filteredData);
-    });
-}
-
-// Wywołanie funkcji po załadowaniu strony
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
     console.log("Strona załadowana, dodawanie obsługi formularza...");
-    const surveyForm = document.getElementById('surveyForm');
-    if (surveyForm) {
-        surveyForm.addEventListener('submit', handleFormSubmit);
-        console.log("Obsługa formularza dodana.");
-    } else {
-        console.error("Nie znaleziono formularza z identyfikatorem 'surveyForm'.");
-    }
+    document.getElementById('surveyForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Zapobiega przeładowaniu strony
+
+        // Pobranie wybranej opcji głosowania
+        const selectedOption = document.querySelector('input[name="vote"]:checked').value;
+        console.log("Wybrana opcja głosowania:", selectedOption);
+
+        // Wczytywanie pliku CSV
+        console.log("Rozpoczynam ładowanie CSV...");
+        Papa.parse("data.csv", {
+            delimiter: ";",
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+                console.log("CSV załadowany:", results);
+                console.log("CSV Meta:", results.meta);
+                console.log("Dane CSV:", results.data);
+
+                // Filtracja danych na podstawie wybranej opcji
+                const columnKey = '1-31'; // Kolumna do filtrowania
+                const filteredData = results.data.filter(row => row[columnKey] === selectedOption);
+
+                console.log("Dane do filtrowania:", results.data);
+                console.log("Sprawdzam wiersz:", results.data[0]);
+
+                if (filteredData.length > 0) {
+                    // Przekształcenie danych do HTML
+                    const resultDiv = document.getElementById('result');
+                    let htmlContent = "<h2>Wyniki dla wybranej opcji:</h2><ul>";
+
+                    filteredData.forEach(row => {
+                        htmlContent += `<li>${row.Nazwisko} ${row["Imię "]}</li>`;
+                    });
+
+                    htmlContent += "</ul>";
+                    resultDiv.innerHTML = htmlContent;
+                } else {
+                    document.getElementById('result').innerHTML = "Brak wyników dla wybranej opcji.";
+                }
+            },
+            error: function (error) {
+                console.error("Błąd podczas ładowania CSV:", error);
+            }
+        });
+    });
+
+    console.log("Obsługa formularza dodana.");
 });
