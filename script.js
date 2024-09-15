@@ -31,7 +31,7 @@ function displayResults(filteredData) {
     const list = document.createElement('ul');
     filteredData.forEach(row => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${row['Nazwisko']} ${row['Imię']}`;
+        listItem.textContent = `${row['Nazwisko']} ${row['Imię ']}`; // Używamy 'Imię ' z przestrzenią
         list.appendChild(listItem);
     });
     resultDiv.appendChild(list);
@@ -47,11 +47,14 @@ function handleFormSubmit(event) {
 
     loadCSV(function(data) {
         console.log("Dane do filtrowania:", data); // Wyświetl dane przed filtrowaniem
+
         // Filtrujemy dane według wybranej opcji głosowania
         const filteredData = data.filter(row => {
             console.log("Sprawdzam wiersz:", row); // Wyświetl każdy wiersz przed filtrowaniem
-            return row['1-35'] === selectedVote;
+            const voteValue = row['1-35'] ? row['1-35'].trim() : ''; // Sprawdź czy istnieje wartość i usuń białe znaki
+            return voteValue === selectedVote;
         });
+
         console.log("Dane po filtrowaniu:", filteredData);
         displayResults(filteredData);
     });
