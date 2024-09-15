@@ -1,6 +1,6 @@
 // Funkcja do ładowania i parsowania pliku CSV
 function loadCSV() {
-  Papa.parse("path/to/data.csv", {
+  Papa.parse("data.csv", {
       delimiter: ";", // Separator w pliku CSV
       download: true,
       header: true, // Traktuje pierwszy wiersz jako nagłówki kolumn
