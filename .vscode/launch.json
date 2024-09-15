@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "https://barti999.github.io/projekt_sejm/",
+            "request": "launch",
+            "url": "https://barti999.github.io/projekt_sejm/"
+        }
+    ]
+}
