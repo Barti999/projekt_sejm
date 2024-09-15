@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('surveyForm');
     const resultDiv = document.getElementById('result');
     
-    // URL do pliku CSV (wymaga hostingu pliku CSV)
+    // URL do pliku CSV (upewnij się, że ścieżka jest poprawna)
     const csvUrl = 'data.csv'; // Zaktualizuj ścieżkę do pliku CSV
     
     // Funkcja wczytująca i przetwarzająca plik CSV
