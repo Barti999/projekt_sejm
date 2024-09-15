@@ -31,7 +31,7 @@ function displayResults(filteredData) {
     const list = document.createElement('ul');
     filteredData.forEach(row => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${row['Nazwisko']} ${row['Imię ']}`; // Używamy 'Imię ' z przestrzenią
+        listItem.textContent = `${row['Nazwisko']} ${row['Imię ']}`; // Użyj 'Imię ' z dodatkową spacją
         list.appendChild(listItem);
     });
     resultDiv.appendChild(list);
@@ -51,8 +51,7 @@ function handleFormSubmit(event) {
         // Filtrujemy dane według wybranej opcji głosowania
         const filteredData = data.filter(row => {
             console.log("Sprawdzam wiersz:", row); // Wyświetl każdy wiersz przed filtrowaniem
-            const voteValue = row['1-35'] ? row['1-35'].trim() : ''; // Sprawdź czy istnieje wartość i usuń białe znaki
-            return voteValue === selectedVote;
+            return row['1-35'] === selectedVote;
         });
 
         console.log("Dane po filtrowaniu:", filteredData);
