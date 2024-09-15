@@ -8,16 +8,21 @@ document.addEventListener('DOMContentLoaded', () => {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
+            console.log('Dane CSV:', results.data); // Debugging line
             processCSVData(results.data);
+        },
+        error: function(error) {
+            console.error('Błąd podczas wczytywania CSV:', error); // Debugging line
         }
     });
 
     function processCSVData(data) {
-        // Find the headers in the CSV data
+        console.log('Przetworzone dane:', data); // Debugging line
+
         const headers = data[0];
         const posiedzeniaIdx = headers.findIndex(header => header === 'Posiedzenie');
         const glosowanieIdx = headers.findIndex(header => header === 'Głosowanie');
-        const votes = headers.slice(3); // Skipping first three columns: Koło, Nazwisko, Imię
+        const votes = headers.slice(3);
 
         const formattedData = data.slice(1).map(row => {
             return {
@@ -40,13 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const glosowanie = 31; // Numer głosowania (zmień na odpowiedni numer)
             const key = `${posiedzenie}-${glosowanie}`;
 
-            if (userVote) {
-                resultDiv.innerHTML = ''; // Wyczyść poprzednie wyniki
+            console.log('Wybrana opcja:', userVote); // Debugging line
+            console.log('Posiedzenie i głosowanie:', key); // Debugging line
 
-                // Znajdź posłów, którzy zagłosowali tak samo jak użytkownik
+            if (userVote) {
+                resultDiv.innerHTML = '';
+
                 const matchingVotes = formattedData.filter(row => 
                     row.votes[key] === userVote
                 );
+
+                console.log('Pasujące głosowania:', matchingVotes); // Debugging line
 
                 if (matchingVotes.length > 0) {
                     const ul = document.createElement('ul');
