@@ -2,14 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('surveyForm');
     const resultDiv = document.getElementById('result');
     
-    // URL do pliku CSV (upewnij się, że ścieżka jest poprawna)
-    const csvUrl = 'data.csv'; // Zaktualizuj ścieżkę do pliku CSV
+    // URL do pliku CSV
+    const csvUrl = 'data.csv'; // Upewnij się, że ścieżka jest poprawna
     
     // Funkcja wczytująca i przetwarzająca plik CSV
     function loadCSV(url, callback) {
         Papa.parse(url, {
             download: true,
-            header: true,
             complete: (result) => {
                 console.log('CSV Loaded:', result); // Debugowanie: Wyświetla wynik wczytywania CSV
                 callback(result);
@@ -32,14 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
             loadCSV(csvUrl, (result) => {
                 const data = result.data;
                 const headers = result.meta.fields;
-
+                
                 console.log('CSV Headers:', headers); // Debugowanie: Wyświetla nagłówki CSV
 
+                // Indeksowanie kolumn
                 const posiedzenieIndex = headers.indexOf('Posiedzenie');
                 const glosowanieIndex = headers.indexOf('Głosowanie');
-                const votesStartIndex = headers.indexOf('1-31'); // Przy założeniu, że numery głosowań są w nagłówkach
                 
-                if (posiedzenieIndex === -1 || glosowanieIndex === -1 || votesStartIndex === -1) {
+                // Mapowanie indeksów kolumn
+                const voteColumns = headers.slice(3); // Zakłada, że pierwsze 3 kolumny to nagłówki dla posiedzeń i głosowań
+
+                console.log('Vote Columns:', voteColumns); // Debugowanie: Wyświetla kolumny głosowań
+
+                if (posiedzenieIndex === -1 || glosowanieIndex === -1) {
                     resultDiv.textContent = 'Błąd w danych CSV.';
                     return;
                 }
@@ -47,9 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let matchingMPs = [];
                 
                 data.forEach(row => {
-                    if (row[posiedzenieIndex] == 1 && row[glosowanieIndex] == 31) {
-                        const voteColumn = row[votesStartIndex + 30]; // Numer kolumny dla głosowania 31
-                        if (voteColumn === vote) {
+                    // Sprawdzanie głosowania
+                    if (row[posiedzenieIndex] && row[glosowanieIndex] && voteColumns.includes(row[glosowanieIndex])) {
+                        const voteColumnIndex = voteColumns.indexOf(row[glosowanieIndex]);
+                        if (voteColumnIndex !== -1 && row[voteColumnIndex] === vote) {
                             matchingMPs.push(`${row['Koło']} ${row['Nazwisko']} ${row['Imię']}`);
                         }
                     }
