@@ -1,33 +1,12 @@
 // Funkcja do ładowania i parsowania pliku CSV
-function loadCSV() {
+function loadCSV(callback) {
     Papa.parse("data.csv", {
         delimiter: ";", // Separator w pliku CSV
         download: true,
         header: true, // Traktuje pierwszy wiersz jako nagłówki kolumn
         complete: function(results) {
             console.log("CSV Loaded:", results);
-
-            // Sprawdzenie i wyświetlenie nagłówków
-            var headers = results.meta.fields;
-            console.log("CSV Headers:", headers);
-
-            if (headers) {
-                // Przykład: Sprawdzenie indeksu konkretnego nagłówka
-                var headerName = "Nazwisko"; // Zmień na interesujący Cię nagłówek
-                var index = headers.indexOf(headerName);
-                console.log("Index of '" + headerName + "':", index);
-
-                if (index !== -1) {
-                    // Przykładowe przetwarzanie danych
-                    results.data.forEach(row => {
-                        console.log("Data:", row[headerName]);
-                    });
-                } else {
-                    console.error("Header '" + headerName + "' not found.");
-                }
-            } else {
-                console.error("No headers found in the CSV.");
-            }
+            callback(results.data); // Przekazujemy dane do callbacka
         },
         error: function(error) {
             console.error("Error parsing CSV:", error);
@@ -35,7 +14,40 @@ function loadCSV() {
     });
 }
 
+// Funkcja do wyświetlania wyników na stronie
+function displayResults(filteredData) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ''; // Czyści poprzednie wyniki
+
+    if (filteredData.length === 0) {
+        resultDiv.innerHTML = 'Brak wyników dla wybranej opcji.';
+        return;
+    }
+
+    const list = document.createElement('ul');
+    filteredData.forEach(row => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${row['Nazwisko']} ${row['Imię']}`;
+        list.appendChild(listItem);
+    });
+    resultDiv.appendChild(list);
+}
+
+// Funkcja do obsługi wysłania formularza
+function handleFormSubmit(event) {
+    event.preventDefault(); // Zapobiega wysłaniu formularza
+
+    const selectedVote = document.querySelector('input[name="vote"]:checked').value;
+
+    loadCSV(function(data) {
+        // Filtrujemy dane według wybranej opcji głosowania
+        const filteredData = data.filter(row => row['1-35'] === selectedVote);
+        displayResults(filteredData);
+    });
+}
+
 // Wywołanie funkcji po załadowaniu strony
 document.addEventListener('DOMContentLoaded', function() {
-    loadCSV();
+    const surveyForm = document.getElementById('surveyForm');
+    surveyForm.addEventListener('submit', handleFormSubmit);
 });
