@@ -7,6 +7,8 @@ function loadCSV(callback) {
         header: true, // Traktuje pierwszy wiersz jako nagłówki kolumn
         complete: function(results) {
             console.log("CSV załadowany:", results);
+            console.log("CSV Meta:", results.meta);
+            console.log("Dane CSV:", results.data); // Wyświetl dane CSV
             callback(results.data); // Przekazujemy dane do callbacka
         },
         error: function(error) {
@@ -44,8 +46,12 @@ function handleFormSubmit(event) {
     console.log("Wybrana opcja głosowania:", selectedVote);
 
     loadCSV(function(data) {
+        console.log("Dane do filtrowania:", data); // Wyświetl dane przed filtrowaniem
         // Filtrujemy dane według wybranej opcji głosowania
-        const filteredData = data.filter(row => row['1-35'] === selectedVote);
+        const filteredData = data.filter(row => {
+            console.log("Sprawdzam wiersz:", row); // Wyświetl każdy wiersz przed filtrowaniem
+            return row['1-35'] === selectedVote;
+        });
         console.log("Dane po filtrowaniu:", filteredData);
         displayResults(filteredData);
     });
