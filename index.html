@@ -1,57 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('surveyForm');
-    const resultDiv = document.getElementById('result');
-    
-    // URL do pliku CSV (wymaga hostingu pliku CSV)
-    const csvUrl = 'path/to/your/data.csv';
-    
-    // Funkcja wczytująca i przetwarzająca plik CSV
-    function loadCSV(url, callback) {
-        Papa.parse(url, {
-            download: true,
-            header: true,
-            complete: callback
-        });
-    }
-
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        const formData = new FormData(form);
-        const vote = formData.get('vote');
-        
-        if (vote) {
-            loadCSV(csvUrl, (result) => {
-                const data = result.data;
-                const headers = result.meta.fields;
-                const posiedzenieIndex = headers.indexOf('Posiedzenie');
-                const glosowanieIndex = headers.indexOf('Głosowanie');
-                const votesStartIndex = headers.indexOf('1-31'); // Przy założeniu, że numery głosowań są w nagłówkach
-                
-                if (posiedzenieIndex === -1 || glosowanieIndex === -1 || votesStartIndex === -1) {
-                    resultDiv.textContent = 'Błąd w danych CSV.';
-                    return;
-                }
-                
-                let matchingMPs = [];
-                
-                data.forEach(row => {
-                    if (row[posiedzenieIndex] == 1 && row[glosowanieIndex] == 31) {
-                        const voteColumn = row[votesStartIndex + 30]; // Numer kolumny dla głosowania 31
-                        if (voteColumn === vote) {
-                            matchingMPs.push(`${row['Koło']} ${row['Nazwisko']} ${row['Imię']}`);
-                        }
-                    }
-                });
-                
-                if (matchingMPs.length > 0) {
-                    resultDiv.textContent = `Posłowie, którzy zagłosowali tak samo: ${matchingMPs.join(', ')}`;
-                } else {
-                    resultDiv.textContent = 'Brak posłów, którzy zagłosowali tak samo.';
-                }
-            });
-        } else {
-            resultDiv.textContent = 'Proszę wybrać opcję.';
-        }
-    });
-});
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona z Ankieta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Ankieta</h1>
+    </header>
+    <main>
+        <form id="surveyForm">
+            <label for="question">Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 31?</label>
+            <div>
+                <input type="radio" id="against" name="vote" value="against">
+                <label for="against">ZA</label>
+            </div>
+            <div>
+                <input type="radio" id="for" name="vote" value="for">
+                <label for="for">PRZECIW</label>
+            </div>
+            <div>
+                <input type="radio" id="abstain" name="vote" value="abstain">
+                <label for="abstain">WSTRZYMAŁBYM SIĘ</label>
+            </div>
+            <button type="submit">Zatwierdź</button>
+        </form>
+        <div id="result"></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
