@@ -12,19 +12,66 @@
     </header>
     <main>
         <form id="surveyForm">
-            <label for="question">Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 31?</label>
-            <div>
-                <input type="radio" id="for" name="vote" value="ZA">
-                <label for="ZA">ZA</label>
-            </div>
-            <div>
-                <input type="radio" id="against" name="vote" value="PRZECIW">
-                <label for="PRZECIW">PRZECIW</label>
-            </div>
-            <div>
-                <input type="radio" id="abstain" name="vote" value="WSTRZYMAŁ SIĘ">
-                <label for="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</label>
-            </div>
+            <fieldset>
+                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 31?</legend>
+                <div>
+                    <input type="radio" id="for_1-31" name="vote_1-31" value="ZA" data-column="1-31">
+                    <label for="for_1-31">ZA</label>
+                </div>
+                <div>
+                    <input type="radio" id="against_1-31" name="vote_1-31" value="PRZECIW" data-column="1-31">
+                    <label for="against_1-31">PRZECIW</label>
+                </div>
+                <div>
+                    <input type="radio" id="abstain_1-31" name="vote_1-31" value="WSTRZYMAŁ SIĘ" data-column="1-31">
+                    <label for="abstain_1-31">WSTRZYMAŁ SIĘ</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 35?</legend>
+                <div>
+                    <input type="radio" id="for_1-35" name="vote_1-35" value="ZA" data-column="1-35">
+                    <label for="for_1-35">ZA</label>
+                </div>
+                <div>
+                    <input type="radio" id="against_1-35" name="vote_1-35" value="PRZECIW" data-column="1-35">
+                    <label for="against_1-35">PRZECIW</label>
+                </div>
+                <div>
+                    <input type="radio" id="abstain_1-35" name="vote_1-35" value="WSTRZYMAŁ SIĘ" data-column="1-35">
+                    <label for="abstain_1-35">WSTRZYMAŁ SIĘ</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 40?</legend>
+                <div>
+                    <input type="radio" id="for_1-40" name="vote_1-40" value="ZA" data-column="1-40">
+                    <label for="for_1-40">ZA</label>
+                </div>
+                <div>
+                    <input type="radio" id="against_1-40" name="vote_1-40" value="PRZECIW" data-column="1-40">
+                    <label for="against_1-40">PRZECIW</label>
+                </div>
+                <div>
+                    <input type="radio" id="abstain_1-40" name="vote_1-40" value="WSTRZYMAŁ SIĘ" data-column="1-40">
+                    <label for="abstain_1-40">WSTRZYMAŁ SIĘ</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 56?</legend>
+                <div>
+                    <input type="radio" id="for_1-56" name="vote_1-56" value="ZA" data-column="1-56">
+                    <label for="for_1-56">ZA</label>
+                </div>
+                <div>
+                    <input type="radio" id="against_1-56" name="vote_1-56" value="PRZECIW" data-column="1-56">
+                    <label for="against_1-56">PRZECIW</label>
+                </div>
+                <div>
+                    <input type="radio" id="abstain_1-56" name="vote_1-56" value="WSTRZYMAŁ SIĘ" data-column="1-56">
+                    <label for="abstain_1-56">WSTRZYMAŁ SIĘ</label>
+                </div>
+            </fieldset>
             <button type="submit">Zatwierdź</button>
         </form>
         <div id="result"></div>

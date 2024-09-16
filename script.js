@@ -1,16 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Strona załadowana, dodawanie obsługi formularza...");
-
+    
     document.getElementById('surveyForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
-        // Pobranie wybranej opcji głosowania
-        const selectedOption = document.querySelector('input[name="vote"]:checked').value;
-        console.log("Wybrana opcja głosowania:", selectedOption);
+        // Pobranie wybranych opcji głosowania
+        const responses = {};
+        document.querySelectorAll('input[type=radio]:checked').forEach(input => {
+            const question = input.name.split('_')[1]; // Wyciąganie numeru pytania
+            const column = input.getAttribute('data-column');
+            responses[column] = input.value;
+        });
+        console.log("Wybrane opcje głosowania:", responses);
 
         // Wczytywanie pliku CSV
+        console.log("Rozpoczynam ładowanie CSV...");
         Papa.parse("data/data.csv", {
-            download: true,  // Pobieranie pliku CSV z serwera
+            download: true,
             delimiter: ";",
             header: true,
             skipEmptyLines: true,
@@ -19,27 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("CSV Meta:", results.meta);
                 console.log("Dane CSV:", results.data);
 
-                // Filtracja danych na podstawie wybranej opcji
-                const columnKey = '1-31'; // Kolumna do filtrowania
-                const filteredData = results.data.filter(row => row[columnKey] === selectedOption);
+                // Obliczanie procentu zgodności
+                const totalQuestions = Object.keys(responses).length;
+                let matchingVotes = 0;
 
-                console.log("Dane do filtrowania:", results.data);
-                console.log("Sprawdzam wiersz:", results.data[0]);
+                results.data.forEach(row => {
+                    let match = true;
+                    for (let column in responses) {
+                        if (row[column] !== responses[column]) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) matchingVotes++;
+                });
 
-                // Przekształcenie danych do HTML
-                const resultDiv = document.getElementById('result');
-                if (filteredData.length > 0) {
-                    let htmlContent = "<h2>Wyniki dla wybranej opcji:</h2><ul>";
-
-                    filteredData.forEach(row => {
-                        htmlContent += `<li>${row.Nazwisko} ${row["Imię "]}</li>`;
-                    });
-
-                    htmlContent += "</ul>";
-                    resultDiv.innerHTML = htmlContent;
-                } else {
-                    resultDiv.innerHTML = "Brak wyników dla wybranej opcji.";
-                }
+                const percentage = (matchingVotes / results.data.length) * 100;
+                document.getElementById('result').innerHTML = `<h2>Wyniki:</h2><p>Twoja zgodność z posłami: ${percentage.toFixed(2)}%</p>`;
             },
             error: function (error) {
                 console.error("Błąd podczas ładowania CSV:", error);
