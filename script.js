@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Strona załadowana, dodawanie obsługi formularza...");
-    
+
     document.getElementById('surveyForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
@@ -25,23 +25,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("CSV Meta:", results.meta);
                 console.log("Dane CSV:", results.data);
 
-                // Obliczanie procentu zgodności
-                const totalQuestions = Object.keys(responses).length;
-                let matchingVotes = 0;
+                // Obliczanie procentu zgodności dla każdego posła
+                const resultsData = results.data;
+                const resultsMap = new Map();
 
-                results.data.forEach(row => {
-                    let match = true;
-                    for (let column in responses) {
-                        if (row[column] !== responses[column]) {
-                            match = false;
-                            break;
-                        }
+                resultsData.forEach(row => {
+                    const posName = `${row.Nazwisko} ${row["Imię "]}`;
+                    if (!resultsMap.has(posName)) {
+                        resultsMap.set(posName, { total: 0, matches: 0 });
                     }
-                    if (match) matchingVotes++;
+
+                    // Sprawdzanie zgodności dla każdego głosowania
+                    for (let column in responses) {
+                        if (row[column] === responses[column]) {
+                            resultsMap.get(posName).matches++;
+                        }
+                        resultsMap.get(posName).total++;
+                    }
                 });
 
-                const percentage = (matchingVotes / results.data.length) * 100;
-                document.getElementById('result').innerHTML = `<h2>Wyniki:</h2><p>Twoja zgodność z posłami: ${percentage.toFixed(2)}%</p>`;
+                // Wyświetlanie wyników
+                let htmlContent = "<h2>Wyniki:</h2><ul>";
+                resultsMap.forEach((data, posName) => {
+                    const percentage = (data.matches / data.total) * 100;
+                    htmlContent += `<li>${posName} - Zgodność: ${percentage.toFixed(2)}%</li>`;
+                });
+                htmlContent += "</ul>";
+                document.getElementById('result').innerHTML = htmlContent;
             },
             error: function (error) {
                 console.error("Błąd podczas ładowania CSV:", error);
