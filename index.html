@@ -12,178 +12,146 @@
     </header>
     <main>
         <form id="surveyForm">
-            <!-- Pytanie 1 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 31?</legend>
-                <div>
-                    <input type="radio" id="q1_for" name="vote1" value="ZA">
-                    <label for="q1_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q1_against" name="vote1" value="PRZECIW">
-                    <label for="q1_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q1_abstain" name="vote1" value="WSTRZYMAŁ SIĘ">
-                    <label for="q1_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
+            <!-- Pytania -->
+            <div class="question-container">
+                <!-- Pytanie 1 -->
+                <fieldset class="question">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 1, głosowania nr 31?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
 
-            <!-- Pytanie 2 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 2, głosowania nr 15?</legend>
-                <div>
-                    <input type="radio" id="q2_for" name="vote2" value="ZA">
-                    <label for="q2_for">ZA</label>
+                <!-- Pytanie 2 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 2, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 3 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 3, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 4 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 4, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 5 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 5, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 6 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 6, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 7 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 7, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 8 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 8, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 9 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 9, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+				 <!-- Pytanie 10 -->
+                <fieldset class="question" style="display: none;">
+                    <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 10, głosowania nr 15?</legend>
+                    <div>
+                        <button type="button" class="option" data-value="ZA">ZA</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="PRZECIW">PRZECIW</button>
+                    </div>
+                    <div>
+                        <button type="button" class="option" data-value="WSTRZYMAŁ SIĘ">WSTRZYMAŁ SIĘ</button>
+                    </div>
+                </fieldset>
+            
+                <!-- Nawigacja -->
+                <div class="navigation">
+                    <button type="button" id="prevBtn" style="display: none;">Poprzednie</button>
+                    <button type="button" id="nextBtn">Następne</button>
                 </div>
-                <div>
-                    <input type="radio" id="q2_against" name="vote2" value="PRZECIW">
-                    <label for="q2_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q2_abstain" name="vote2" value="WSTRZYMAŁ SIĘ">
-                    <label for="q2_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 3 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 3, głosowania nr 44?</legend>
-                <div>
-                    <input type="radio" id="q3_for" name="vote3" value="ZA">
-                    <label for="q3_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q3_against" name="vote3" value="PRZECIW">
-                    <label for="q3_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q3_abstain" name="vote3" value="WSTRZYMAŁ SIĘ">
-                    <label for="q3_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 4 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 4, głosowania nr 29?</legend>
-                <div>
-                    <input type="radio" id="q4_for" name="vote4" value="ZA">
-                    <label for="q4_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q4_against" name="vote4" value="PRZECIW">
-                    <label for="q4_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q4_abstain" name="vote4" value="WSTRZYMAŁ SIĘ">
-                    <label for="q4_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 5 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 5, głosowania nr 12?</legend>
-                <div>
-                    <input type="radio" id="q5_for" name="vote5" value="ZA">
-                    <label for="q5_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q5_against" name="vote5" value="PRZECIW">
-                    <label for="q5_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q5_abstain" name="vote5" value="WSTRZYMAŁ SIĘ">
-                    <label for="q5_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 6 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 6, głosowania nr 23?</legend>
-                <div>
-                    <input type="radio" id="q6_for" name="vote6" value="ZA">
-                    <label for="q6_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q6_against" name="vote6" value="PRZECIW">
-                    <label for="q6_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q6_abstain" name="vote6" value="WSTRZYMAŁ SIĘ">
-                    <label for="q6_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 7 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 7, głosowania nr 37?</legend>
-                <div>
-                    <input type="radio" id="q7_for" name="vote7" value="ZA">
-                    <label for="q7_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q7_against" name="vote7" value="PRZECIW">
-                    <label for="q7_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q7_abstain" name="vote7" value="WSTRZYMAŁ SIĘ">
-                    <label for="q7_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 8 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 8, głosowania nr 48?</legend>
-                <div>
-                    <input type="radio" id="q8_for" name="vote8" value="ZA">
-                    <label for="q8_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q8_against" name="vote8" value="PRZECIW">
-                    <label for="q8_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q8_abstain" name="vote8" value="WSTRZYMAŁ SIĘ">
-                    <label for="q8_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 9 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 9, głosowania nr 19?</legend>
-                <div>
-                    <input type="radio" id="q9_for" name="vote9" value="ZA">
-                    <label for="q9_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q9_against" name="vote9" value="PRZECIW">
-                    <label for="q9_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q9_abstain" name="vote9" value="WSTRZYMAŁ SIĘ">
-                    <label for="q9_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Pytanie 10 -->
-            <fieldset>
-                <legend>Jak zagłosowałbyś w sprawie ustawy z Posiedzenia nr 10, głosowania nr 52?</legend>
-                <div>
-                    <input type="radio" id="q10_for" name="vote10" value="ZA">
-                    <label for="q10_for">ZA</label>
-                </div>
-                <div>
-                    <input type="radio" id="q10_against" name="vote10" value="PRZECIW">
-                    <label for="q10_against">PRZECIW</label>
-                </div>
-                <div>
-                    <input type="radio" id="q10_abstain" name="vote10" value="WSTRZYMAŁ SIĘ">
-                    <label for="q10_abstain">WSTRZYMAŁ SIĘ</label>
-                </div>
-            </fieldset>
-
-            <!-- Zatwierdzenie -->
-            <button type="submit">Zatwierdź</button>
+            </div>
         </form>
         <div id="result"></div>
     </main>
