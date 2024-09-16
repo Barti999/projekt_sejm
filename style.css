@@ -14,11 +14,25 @@ header {
 
 main {
     padding: 2rem;
-    max-width: 800px;
+    max-width: 1200px; /* Zwiększona szerokość, aby pomieścić oba kontenery obok siebie */
     margin: auto;
     background: #ffffff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Pozwala na zawijanie w przypadku mniejszych ekranów */
+}
+
+form {
+    flex: 2; /* Formularz zajmuje więcej miejsca */
+    margin-right: 20px;
+}
+
+#result, #summary {
+    flex: 1; /* Tabela wyników zajmuje mniej miejsca */
 }
 
 label {
