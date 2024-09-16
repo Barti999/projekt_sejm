@@ -64,14 +64,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Sortowanie wyników od najwyższej zgodności do najniższej
                 scores.sort((a, b) => b.matchingPercentage - a.matchingPercentage);
 
-                // Wyświetlanie wyników
-                const resultDiv = document.getElementById('result');
-                let htmlContent = "<h2>Procentowa zgodność z poszczególnymi posłami:</h2><ul>";
-                scores.forEach(score => {
-                    htmlContent += `<li>${score.name}: ${score.matchingPercentage}%</li>`;
-                });
-                htmlContent += "</ul>";
-                resultDiv.innerHTML = htmlContent;
+// Wyświetlanie wyników w tabeli
+const resultDiv = document.getElementById('result');
+let htmlContent = `
+    <h2>Procentowa zgodność z poszczególnymi posłami:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Poseł</th>
+                <th>Procent zgodności</th>
+            </tr>
+        </thead>
+        <tbody>
+`;
+scores.forEach(score => {
+    htmlContent += `
+        <tr>
+            <td>${score.name}</td>
+            <td>${score.matchingPercentage}%</td>
+        </tr>
+    `;
+});
+htmlContent += `
+        </tbody>
+    </table>
+`;
+resultDiv.innerHTML = htmlContent;
             },
             error: function (error) {
                 console.error("Błąd podczas ładowania CSV:", error);
