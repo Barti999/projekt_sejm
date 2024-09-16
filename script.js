@@ -1,91 +1,121 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Strona załadowana, dodawanie obsługi formularza...");
-
     document.getElementById('surveyForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
-        // Pobranie wybranych opcji głosowania
-        const responses = {};
-        document.querySelectorAll('input[type=radio]:checked').forEach(input => {
-            const question = input.name.split('_')[1]; // Wyciąganie numeru pytania
-            const column = input.getAttribute('data-column');
-            responses[column] = input.value;
-        });
-        console.log("Wybrane opcje głosowania:", responses);
+        // Pobranie odpowiedzi z formularza
+        const answers = Array.from(document.querySelectorAll('input[type="radio"]:checked'))
+            .map(input => ({
+                column: input.dataset.column,
+                vote: input.value
+            }));
 
         // Wczytywanie pliku CSV
-        console.log("Rozpoczynam ładowanie CSV...");
         Papa.parse("data/data.csv", {
             download: true,
             delimiter: ";",
             header: true,
             skipEmptyLines: true,
             complete: function (results) {
-                console.log("CSV załadowany:", results);
-                console.log("CSV Meta:", results.meta);
-                console.log("Dane CSV:", results.data);
+                const data = results.data;
+                const columnKeys = answers.map(a => a.column);
+                const filteredData = data.filter(row => columnKeys.includes(row['column']));
 
-                // Obliczanie procentu zgodności dla każdego posła
-                const resultsData = results.data;
-                const resultsMap = new Map();
+                // Obliczanie zgodności
+                const compatibility = {};
+                const voteCounts = {};
 
-                resultsData.forEach(row => {
-                    const posName = `${row.Nazwisko} ${row["Imię "]}`;
-                    if (!resultsMap.has(posName)) {
-                        resultsMap.set(posName, { total: 0, matches: 0, party: row.Koło });
-                    }
-
-                    // Sprawdzanie zgodności dla każdego głosowania
-                    for (let column in responses) {
-                        if (row[column] === responses[column]) {
-                            resultsMap.get(posName).matches++;
+                filteredData.forEach(row => {
+                    columnKeys.forEach(columnKey => {
+                        if (!compatibility[row.Nazwisko]) {
+                            compatibility[row.Nazwisko] = { ZA: 0, PRZECIW: 0, WSTRZYMAŁ: 0, total: 0 };
                         }
-                        resultsMap.get(posName).total++;
-                    }
+
+                        if (row[columnKey] === 'ZA') compatibility[row.Nazwisko].ZA++;
+                        else if (row[columnKey] === 'PRZECIW') compatibility[row.Nazwisko].PRZECIW++;
+                        else if (row[columnKey] === 'WSTRZYMAŁ SIĘ') compatibility[row.Nazwisko].WSTRZYMAŁ++;
+
+                        compatibility[row.Nazwisko].total++;
+                    });
                 });
 
-                // Sortowanie posłów według procentu zgodności
-                const sortedResults = Array.from(resultsMap.entries()).map(([name, data]) => ({
-                    name,
-                    party: data.party,
-                    percentage: (data.matches / data.total) * 100
-                })).sort((a, b) => b.percentage - a.percentage);
+                // Obliczanie procentowej zgodności
+                const resultsTable = [];
+                for (const [name, votes] of Object.entries(compatibility)) {
+                    const totalVotes = votes.total;
+                    const correctVotes = votes.ZA + votes.PRZECIW + votes.WSTRZYMAŁ;
+                    const percentage = ((correctVotes / totalVotes) * 100).toFixed(2);
 
-                // Wyświetlanie wyników w tabeli
-                let htmlContent = `
-                    <h2>Wyniki:</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Klub</th>
-                                <th>Poseł</th>
-                                <th>Procent zgodności</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
+                    resultsTable.push({
+                        name,
+                        percentage,
+                        votes
+                    });
+                }
+
+                // Sortowanie wyników od najbardziej zgodnych do najmniej zgodnych
+                resultsTable.sort((a, b) => b.percentage - a.percentage);
+
+                // Generowanie tabeli wyników
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = "<h2>Wyniki porównań:</h2>";
+
+                let htmlContent = "<table><thead><tr><th>Imię i nazwisko</th><th>Klub</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Procent zgodności</th></tr></thead><tbody>";
                 
-                sortedResults.forEach(result => {
-                    htmlContent += `
-                        <tr>
-                            <td>${result.party}</td>
-                            <td>${result.name}</td>
-                            <td>${result.percentage.toFixed(2)}%</td>
-                        </tr>
-                    `;
+                resultsTable.forEach(row => {
+                    htmlContent += `<tr>
+                        <td>${row.name}</td>
+                        <td>${data.find(d => d.Nazwisko === row.name).Klub}</td>
+                        <td>${row.votes.ZA}</td>
+                        <td>${row.votes.PRZECIW}</td>
+                        <td>${row.votes.WSTRZYMAŁ}</td>
+                        <td>${row.percentage}%</td>
+                    </tr>`;
                 });
 
-                htmlContent += `
-                        </tbody>
-                    </table>
-                `;
-                document.getElementById('result').innerHTML = htmlContent;
-            },
-            error: function (error) {
-                console.error("Błąd podczas ładowania CSV:", error);
+                htmlContent += "</tbody></table>";
+                resultDiv.innerHTML = htmlContent;
+
+                // Generowanie podsumowania
+                const summaryDiv = document.getElementById('summary');
+                summaryDiv.innerHTML = "<h3>Podsumowanie głosowań:</h3>";
+
+                const summaries = {
+                    "1-31": { ZA: 0, PRZECIW: 0, WSTRZYMAŁ: 0, NIEOBECNY: 0 },
+                    "1-35": { ZA: 0, PRZECIW: 0, WSTRZYMAŁ: 0, NIEOBECNY: 0 },
+                    "1-40": { ZA: 0, PRZECIW: 0, WSTRZYMAŁ: 0, NIEOBECNY: 0 },
+                    "1-56": { ZA: 0, PRZECIW: 0, WSTRZYMAŁ: 0, NIEOBECNY: 0 }
+                };
+
+                filteredData.forEach(row => {
+                    columnKeys.forEach(columnKey => {
+                        if (summaries[columnKey]) {
+                            summaries[columnKey].ZA += parseInt(row.ZA || 0);
+                            summaries[columnKey].PRZECIW += parseInt(row.PRZECIW || 0);
+                            summaries[columnKey].WSTRZYMAŁ += parseInt(row.WSTRZYMAŁ || 0);
+                            summaries[columnKey].NIEOBECNY += parseInt(row.NIEOBECNY || 0);
+                        }
+                    });
+                });
+
+                let summaryHtml = "<table><thead><tr><th>Głosowanie</th><th>ZA</th><th>Przeciw</th><th>Wstrzymał się</th><th>Nieobecny</th><th>Dyscyplina</th></tr></thead><tbody>";
+
+                Object.keys(summaries).forEach(key => {
+                    const totalVotes = summaries[key].ZA + summaries[key].PRZECIW + summaries[key].WSTRZYMAŁ + summaries[key].NIEOBECNY;
+                    const discipline = totalVotes ? ((summaries[key].ZA + summaries[key].PRZECIW) / totalVotes * 100).toFixed(2) + "%" : "Brak danych";
+                    
+                    summaryHtml += `<tr>
+                        <td>Posiedzenie nr 1, głosowanie nr ${key}</td>
+                        <td>${summaries[key].ZA}</td>
+                        <td>${summaries[key].PRZECIW}</td>
+                        <td>${summaries[key].WSTRZYMAŁ}</td>
+                        <td>${summaries[key].NIEOBECNY}</td>
+                        <td>${discipline}</td>
+                    </tr>`;
+                });
+
+                summaryHtml += "</tbody></table>";
+                summaryDiv.innerHTML = summaryHtml;
             }
         });
     });
-
-    console.log("Obsługa formularza dodana.");
 });
