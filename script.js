@@ -44,13 +44,41 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                // Wyświetlanie wyników
-                let htmlContent = "<h2>Wyniki:</h2><ul>";
-                resultsMap.forEach((data, posName) => {
-                    const percentage = (data.matches / data.total) * 100;
-                    htmlContent += `<li>${data.party} - ${posName} - Zgodność: ${percentage.toFixed(2)}%</li>`;
+                // Sortowanie posłów według procentu zgodności
+                const sortedResults = Array.from(resultsMap.entries()).map(([name, data]) => ({
+                    name,
+                    party: data.party,
+                    percentage: (data.matches / data.total) * 100
+                })).sort((a, b) => b.percentage - a.percentage);
+
+                // Wyświetlanie wyników w tabeli
+                let htmlContent = `
+                    <h2>Wyniki:</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Klub</th>
+                                <th>Poseł</th>
+                                <th>Procent zgodności</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                sortedResults.forEach(result => {
+                    htmlContent += `
+                        <tr>
+                            <td>${result.party}</td>
+                            <td>${result.name}</td>
+                            <td>${result.percentage.toFixed(2)}%</td>
+                        </tr>
+                    `;
                 });
-                htmlContent += "</ul>";
+
+                htmlContent += `
+                        </tbody>
+                    </table>
+                `;
                 document.getElementById('result').innerHTML = htmlContent;
             },
             error: function (error) {
