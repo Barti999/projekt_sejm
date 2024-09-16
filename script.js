@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 resultsData.forEach(row => {
                     const posName = `${row.Nazwisko} ${row["Imię "]}`;
                     if (!resultsMap.has(posName)) {
-                        resultsMap.set(posName, { total: 0, matches: 0 });
+                        resultsMap.set(posName, { total: 0, matches: 0, party: row.Koło });
                     }
 
                     // Sprawdzanie zgodności dla każdego głosowania
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let htmlContent = "<h2>Wyniki:</h2><ul>";
                 resultsMap.forEach((data, posName) => {
                     const percentage = (data.matches / data.total) * 100;
-                    htmlContent += `<li>${posName} - Zgodność: ${percentage.toFixed(2)}%</li>`;
+                    htmlContent += `<li>${data.party} - ${posName} - Zgodność: ${percentage.toFixed(2)}%</li>`;
                 });
                 htmlContent += "</ul>";
                 document.getElementById('result').innerHTML = htmlContent;
