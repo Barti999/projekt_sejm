@@ -1,15 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Strona załadowana, dodawanie obsługi formularza...");
-    
     document.getElementById('surveyForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
-        // Pobranie wszystkich wybranych opcji głosowania
-        const selectedVotes = {};
+        // Pobranie wybranej opcji głosowania
+        const votes = {};
         document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-            const name = radio.name;
-            const value = radio.value;
-            selectedVotes[name] = value;
+            const column = radio.getAttribute('data-column');
+            votes[column] = radio.value;
         });
 
         // Wczytywanie pliku CSV
@@ -19,101 +16,65 @@ document.addEventListener("DOMContentLoaded", function () {
             header: true,
             skipEmptyLines: true,
             complete: function (results) {
-                console.log("CSV załadowany:", results);
-                
-                if (!results || !results.data || results.data.length === 0) {
-                    console.error("Brak danych w pliku CSV.");
-                    return;
-                }
+                const data = results.data;
+                const poslowie = {};
+                const glosowania = ["1-31", "1-35", "1-40", "1-56"];
+                glosowania.forEach(g => {
+                    poslowie[g] = {
+                        za: 0,
+                        przeciw: 0,
+                        wstrzymal: 0,
+                        nieobecny: 0,
+                        total: 0
+                    };
+                });
 
-                const resultsElement = document.getElementById('result');
-                if (!resultsElement) {
-                    console.error("Element o id 'result' nie został znaleziony.");
-                    return;
-                }
-
-                const questions = [
-                    { column: '1-31', label: 'Posiedzenia nr 1, głosowania nr 31' },
-                    { column: '1-35', label: 'Posiedzenia nr 1, głosowania nr 35' },
-                    { column: '1-40', label: 'Posiedzenia nr 1, głosowania nr 40' },
-                    { column: '1-56', label: 'Posiedzenia nr 1, głosowania nr 56' }
-                ];
-
-                let htmlContent = '<h2>Wyniki:</h2>';
-
-                questions.forEach(question => {
-                    const columnKey = question.column;
-                    const selectedOption = selectedVotes[`vote_${columnKey}`];
-                    const filteredData = results.data.filter(row => row[columnKey] === selectedOption);
-                    
-                    htmlContent += `<h3>Głosowanie: ${question.label}</h3>`;
-                    htmlContent += `<p>Wybrana opcja: ${selectedOption}</p>`;
-
-                    if (filteredData.length > 0) {
-                        htmlContent += "<ul>";
-                        filteredData.forEach(row => {
-                            htmlContent += `<li>${row.Nazwisko} ${row["Imię "]}</li>`;
+                data.forEach(row => {
+                    if (row.Imie_i_nazwisko && row.Klub) {
+                        glosowania.forEach(g => {
+                            if (row[g] === "ZA") poslowie[g].za++;
+                            if (row[g] === "PRZECIW") poslowie[g].przeciw++;
+                            if (row[g] === "WSTRZYMAŁ SIĘ") poslowie[g].wstrzymal++;
+                            if (row[g] === "NIEOBECNY") poslowie[g].nieobecny++;
+                            poslowie[g].total++;
                         });
-                        htmlContent += "</ul>";
-                    } else {
-                        htmlContent += "<p>Brak wyników dla wybranej opcji.</p>";
                     }
                 });
 
-                // Dodanie podsumowania dla posłów
-                const summaryTable = generateSummaryTable(results.data);
-                htmlContent += '<h2>Podsumowanie głosowań:</h2>';
-                htmlContent += summaryTable;
+                let resultHtml = '<h2>Lista posłów</h2><table><thead><tr><th>Imię i nazwisko</th><th>Klub</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Procent zgodności</th></tr></thead><tbody>';
+                
+                data.forEach(row => {
+                    if (row.Imie_i_nazwisko && row.Klub) {
+                        const name = row.Imie_i_nazwisko;
+                        const club = row.Klub;
+                        let zgodnosc = 0;
+                        glosowania.forEach(g => {
+                            if (votes[g]) {
+                                const vote = votes[g];
+                                if (row[g] === vote) {
+                                    zgodnosc += 100;
+                                }
+                            }
+                        });
+                        zgodnosc = (zgodnosc / glosowania.length).toFixed(2);
+                        resultHtml += `<tr><td>${name}</td><td>${club}</td><td>${zgodnosc}%</td></tr>`;
+                    }
+                });
+                resultHtml += '</tbody></table>';
 
-                resultsElement.innerHTML = htmlContent;
-            },
-            error: function (error) {
-                console.error("Błąd podczas ładowania CSV:", error);
+                let summaryHtml = '<h2>Podsumowanie głosowań</h2><table><thead><tr><th>Posiedzenie</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Niebecny</th><th>Dyscyplina</th></tr></thead><tbody>';
+
+                glosowania.forEach(g => {
+                    const data = poslowie[g];
+                    const dyscyplina = ((data.za + data.przeciw + data.wstrzymal) / data.total * 100).toFixed(2) + '%';
+                    summaryHtml += `<tr><td>Posiedzenie nr 1, głosowanie nr ${g}</td><td>${data.za}</td><td>${data.przeciw}</td><td>${data.wstrzymal}</td><td>${data.nieobecny}</td><td>${dyscyplina}</td></tr>`;
+                });
+
+                summaryHtml += '</tbody></table>';
+
+                document.getElementById('result').innerHTML = resultHtml;
+                document.getElementById('summary').innerHTML = summaryHtml;
             }
         });
     });
-
-    console.log("Obsługa formularza dodana.");
 });
-
-// Funkcja generująca tabelę podsumowującą dla posłów
-function generateSummaryTable(data) {
-    // Zbierz dane dla podsumowania
-    const clubs = {};
-    data.forEach(row => {
-        const club = row.Klub;
-        if (!clubs[club]) {
-            clubs[club] = { ZA: 0, PRZECIW: 0, WSTRZYMAŁ_SIĘ: 0, NIEOBECNY: 0, DYSK: 0, TOTAL: 0 };
-        }
-
-        // Zliczanie głosów w zależności od kolumn
-        Object.keys(clubs[club]).forEach(voteType => {
-            if (row[voteType]) {
-                clubs[club][voteType] += parseInt(row[voteType], 10) || 0;
-            }
-        });
-
-        clubs[club].TOTAL++;
-    });
-
-    // Generowanie HTML dla tabeli
-    let tableHtml = '<table><caption>Podsumowanie głosowań</caption><thead><tr><th>KLUB</th><th>ZA</th><th>PRZECIW</th><th>WSTRZYMAŁ SIĘ</th><th>NIEOBECNY</th><th>DYSK</th></tr></thead><tbody>';
-
-    Object.keys(clubs).forEach(club => {
-        const { ZA, PRZECIW, WSTRZYMAŁ_SIĘ, NIEOBECNY, DYSK, TOTAL } = clubs[club];
-        const totalVotes = ZA + PRZECIW + WSTRZYMAŁ_SIĘ + NIEOBECNY;
-        const percentDiscipline = ((DYSK / TOTAL) * 100).toFixed(2) + '%';
-
-        tableHtml += `<tr>
-            <td>${club}</td>
-            <td>${ZA}</td>
-            <td>${PRZECIW}</td>
-            <td>${WSTRZYMAŁ_SIĘ}</td>
-            <td>${NIEOBECNY}</td>
-            <td>${percentDiscipline}</td>
-        </tr>`;
-    });
-
-    tableHtml += '</tbody></table>';
-    return tableHtml;
-}
