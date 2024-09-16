@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const data = results.data;
                 const poslowie = {};
                 const glosowania = ["1-31", "1-35", "1-40", "1-56"];
+                
                 glosowania.forEach(g => {
                     poslowie[g] = {
                         za: 0,
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                let resultHtml = '<h2>Lista posłów</h2><table><thead><tr><th>Imię i nazwisko</th><th>Klub</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Procent zgodności</th></tr></thead><tbody>';
+                let resultHtml = '<h2>Lista posłów</h2><table><thead><tr><th>Imię i nazwisko</th><th>Klub</th><th>Procent zgodności</th></tr></thead><tbody>';
                 
                 data.forEach(row => {
                     if (row.Imie_i_nazwisko && row.Klub) {
@@ -62,12 +63,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 resultHtml += '</tbody></table>';
 
-                let summaryHtml = '<h2>Podsumowanie głosowań</h2><table><thead><tr><th>Posiedzenie</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Niebecny</th><th>Dyscyplina</th></tr></thead><tbody>';
+                let summaryHtml = '<h2>Podsumowanie głosowań</h2><table><thead><tr><th>Posiedzenie</th><th>Za</th><th>Przeciw</th><th>Wstrzymał się</th><th>Nieobecny</th><th>Dyscyplina</th></tr></thead><tbody>';
 
                 glosowania.forEach(g => {
-                    const data = poslowie[g];
-                    const dyscyplina = ((data.za + data.przeciw + data.wstrzymal) / data.total * 100).toFixed(2) + '%';
-                    summaryHtml += `<tr><td>Posiedzenie nr 1, głosowanie nr ${g}</td><td>${data.za}</td><td>${data.przeciw}</td><td>${data.wstrzymal}</td><td>${data.nieobecny}</td><td>${dyscyplina}</td></tr>`;
+                    const dataG = poslowie[g]; // Użyj dataG jako zmiennej, aby uniknąć konfliktu z danymi
+                    const dyscyplina = ((dataG.za + dataG.przeciw + dataG.wstrzymal) / dataG.total * 100).toFixed(2) + '%';
+                    summaryHtml += `<tr><td>Posiedzenie nr 1, głosowanie nr ${g}</td><td>${dataG.za}</td><td>${dataG.przeciw}</td><td>${dataG.wstrzymal}</td><td>${dataG.nieobecny}</td><td>${dyscyplina}</td></tr>`;
                 });
 
                 summaryHtml += '</tbody></table>';
