@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     return {
                         name: `${row["Imię "]} ${row.Nazwisko}`,
-                        club: row["Klub"] || "Brak danych", // Domyślna wartość, jeśli kolumna nie istnieje
+                        club: row["Koło"] || "Brak danych", // Domyślna wartość, jeśli kolumna nie istnieje
                         matchingPercentage: matchingPercentage.toFixed(2)
                     };
                 });
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <thead>
                             <tr>
                                 <th>Poseł</th>
-                                <th>Klub</th>
+                                <th>Koło</th>
                                 <th>Procent zgodności</th>
                             </tr>
                         </thead>
